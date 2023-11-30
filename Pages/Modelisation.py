@@ -18,11 +18,11 @@ def load_model(path, way):
     classifier_pipeline = pickle.load(pickle_in)
     return classifier_pipeline
 
-classifier = load_model("/Users/jeaneudesdesgraviers/Downloads/project_7/classifier_lr_few.pkl","rb")
-#classifier = joblib.load("/Users/jeaneudesdesgraviers/Downloads/project_7/classifier_lr_few.pkl")
-#preprocessed_data = pd.read_csv("/Users/jeaneudesdesgraviers/Downloads/project_7/preprocessed_dataset.csv")
+classifier = load_model("classifier_lr_few.pkl","rb")
+#classifier = joblib.load("classifier_lr_few.pkl")
+
 # Load the preprocessed dataset
-df = pd.read_csv("/Users/jeaneudesdesgraviers/Downloads/project_7/data_loan_few_features.csv")
+df = pd.read_csv("data_loan_few_features.csv")
 
 #load JS vis in the notebook
 shap.initjs()
@@ -65,7 +65,7 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
 
     st.pyplot(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
     st.pyplot(shap.plots.waterfall(shap_values_water[0], max_display=10))
-    #st.pyplot(shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], df.iloc[100002]))
+    st.pyplot(shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], df.iloc[100002]))
     #shap.plots._waterfall.waterfall_legacy(explainer.expected_value[0],shap_values[1][0, :], data.iloc[input_id, :])
 
 @st.cache_data
