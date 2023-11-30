@@ -9,10 +9,10 @@ import pandas as pd
 
 app = FastAPI()
 
-pickle_in = open("/Users/jeaneudesdesgraviers/Downloads/project_7/classifier_lr_few.pkl","rb")
+pickle_in = open("classifier_lr_few.pkl","rb")
 classifier_pipeline = pickle.load(pickle_in)
 
-data = pd.read_csv("/Users/jeaneudesdesgraviers/Downloads/project_7/data_loan_few_features.csv")
+data = pd.read_csv("data_loan_few_features.csv")
 stored_data = {}
 
 # 1. Index route, opens automatically on http://127.0.0.1:8000
