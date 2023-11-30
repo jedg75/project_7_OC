@@ -8,3 +8,4 @@ shap==0.43.0
 streamlit==1.27.2
 uvicorn==0.23.2
 fastapi==0.103.2
+imbalanced-learn==0.10.0
