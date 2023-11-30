@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import requests
 
 
-data0 = pd.read_csv("/Users/jeaneudesdesgraviers/Downloads/project_7/data_loan_few_features.csv")
+data0 = pd.read_csv("data_loan_few_features.csv")
 print(data0.columns)
 df_no_na = data0.dropna()
 
