@@ -6,3 +6,4 @@ plotly==5.9.0
 Requests==2.31.0
 shap==0.43.0
 streamlit==1.27.2
+uvicorn==0.23.2
