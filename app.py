@@ -1,62 +1,105 @@
-# -*- coding: utf-8 -*-
-
 # 1. Library imports
 import uvicorn
 from fastapi import FastAPI
+from New_customer import new_customer
 import pickle
 import pandas as pd
-import random
-import streamlit as st
 
-# 2. Create the app object
+# Version de FastAPI
+
 app = FastAPI()
 
-try:
-    with open("/Users/jeaneudesdesgraviers/Downloads/project 7/classifier_pipe_project_7.pkl", "rb") as pickle_file:
-        classifier = pickle.load(pickle_file)
-except FileNotFoundError:
-    print("There is no pickle file to be loaded.")
+pickle_in = open("/Users/jeaneudesdesgraviers/Downloads/project_7/classifier_lr_few.pkl","rb")
+classifier_pipeline = pickle.load(pickle_in)
 
-try:
-    with open("/Users/jeaneudesdesgraviers/Downloads/project 7/preprocessed_dataset.csv", "rb") as data_file:
-        data = pd.read_csv(data_file)
-except FileNotFoundError:
-    print("There is no data file to be loaded.")
+data = pd.read_csv("/Users/jeaneudesdesgraviers/Downloads/project_7/data_loan_few_features.csv")
+stored_data = {}
 
-random_pick = random.randint(1,len(data))
-random_row = data.iloc[random_pick]
-
-st.title('Modèle de scoring')
-
-# 3. Index route, opens automatically on http://127.0.0.1:8000
+# 1. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
 def index():
-    return {'message': 'Hello, World'}
+    return {'message': 'Bienvenue sur mon API de prediction'}
 
-# 4. Route with a single parameter, returns the parameter within a message
-#    Located at: http://127.0.0.1:8000/AnyNameHere
-@app.get('/{name}')
-def get_name(name: str):
-    return {'Welcome To Krish Youtube Channel': f'{name}'}
+# 2. Expose the prediction functionality, make a prediction from the passed
+@app.post('/predict_proba/{client_id}')
+def predict_client(client_id : int):
+    row = data.loc[data['SK_ID_CURR'] == client_id]
+    if row.empty:
+        return { "message" : 'Customer do not exists' }
+    prediction = classifier_pipeline.predict_proba(row)
+    row.fillna("null", inplace=True)
 
-# 5. Expose the prediction functionality, make a prediction from the passed
-#    JSON data and return the predicted Bank Note with the confidence
-@app.post('/predict')
-def predict_fraud():
-    # print(classifier.predict([[variance,skewness,curtosis,entropy]]))
-    prediction = classifier.predict(random_row)
-    if (prediction[0] > 0.5):
-        prediction = "Fake note"
+    if prediction[0][0] > 0.67:
+        prediction_text = "Great"
     else:
-        prediction = "Its a Bank note"
+        prediction_text = "Need further evaluation"
+
     return {
-        'prediction': prediction
+        'prediction': prediction_text,
+        'probabilité': prediction[0][0],
+        'dataframe': row.to_dict()
     }
 
+@app.post("/predict_new")
+def predict_newcustomer(data:new_customer):
+    data = data.dict()
+    EXT_SOURCE_3= data['EXT_SOURCE_3']
+    EXT_SOURCE_2= data['EXT_SOURCE_2']
+    EXT_SOURCE_1= data['EXT_SOURCE_1']
+    AMT_GOODS_PRICE= data['AMT_GOODS_PRICE']
+    AMT_ANNUITY= data['AMT_ANNUITY']
+    FLAG_OWN_CAR= data['FLAG_OWN_CAR']
+    NAME_EDUCATION_TYPE= data['NAME_EDUCATION_TYPE']
+    AMT_CREDIT= data['AMT_CREDIT']
+    DAYS_EMPLOYED= data['DAYS_EMPLOYED']
+    DAYS_BIRTH = data['DAYS_BIRTH']
+
+    CREDIT_TERM = AMT_ANNUITY / AMT_CREDIT
+
+    input_data_df = pd.DataFrame({
+        'EXT_SOURCE_3': [EXT_SOURCE_3],
+        'EXT_SOURCE_2': [EXT_SOURCE_2],
+        'EXT_SOURCE_1': [EXT_SOURCE_1],
+        'AMT_GOODS_PRICE': [AMT_GOODS_PRICE],
+        'AMT_ANNUITY': [AMT_ANNUITY],
+        'FLAG_OWN_CAR': [FLAG_OWN_CAR],
+        'NAME_EDUCATION_TYPE': [NAME_EDUCATION_TYPE],
+        'CREDIT_TERM': [CREDIT_TERM],
+        'DAYS_EMPLOYED': [DAYS_EMPLOYED],
+        'DAYS_BIRTH': [DAYS_BIRTH]
+    })
+
+    prediction = classifier_pipeline.predict_proba(input_data_df)
+
+    dataframe_dict = {
+        'EXT_SOURCE_3': EXT_SOURCE_3,
+        'EXT_SOURCE_2': EXT_SOURCE_2,
+        'CREDIT_TERM': CREDIT_TERM,
+        'EXT_SOURCE_1': EXT_SOURCE_1,
+        'AMT_GOODS_PRICE': AMT_GOODS_PRICE,
+        'AMT_CREDIT' : AMT_CREDIT,
+        'AMT_ANNUITY': AMT_ANNUITY,
+        'FLAG_OWN_CAR': FLAG_OWN_CAR,
+        'NAME_EDUCATION_TYPE': NAME_EDUCATION_TYPE,
+        'DAYS_EMPLOYED': DAYS_EMPLOYED,
+        'DAYS_BIRTH': DAYS_BIRTH
+
+    }
+
+    stored_data['dataframe_dict'] = dataframe_dict
+
+    return {
+        'probabilité': prediction[0][0],
+        'dataframe_dict': dataframe_dict
+    }
+
+@app.get("/predict_new")
+def get_stored_data():
+    return stored_data
 
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
 
-# uvicorn app:app --reload
+#uvicorn app:app --reload
