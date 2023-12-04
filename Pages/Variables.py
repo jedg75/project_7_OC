@@ -5,9 +5,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import requests
 
-
 data0 = pd.read_csv("data_loan_few_features.csv")
-print(data0.columns)
+
 df_no_na = data0.dropna()
 
 @st.cache_data
@@ -49,7 +48,7 @@ options = st.sidebar.radio("Choix de la variable",
                                     "Analyse bivariée"
                                     ])
 
-request = requests.get(url = 'http://127.0.0.1:8000/predict_new')
+request = requests.get(url = 'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_new')
 data = request.json()
 if request.status_code == 200:
         data = request.json()

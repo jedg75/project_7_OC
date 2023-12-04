@@ -1,11 +1,8 @@
-# 1. Library imports
 import uvicorn
 from fastapi import FastAPI
 from New_customer import new_customer
 import pickle
 import pandas as pd
-
-# Version de FastAPI
 
 app = FastAPI()
 
@@ -15,12 +12,10 @@ classifier_pipeline = pickle.load(pickle_in)
 data = pd.read_csv("data_loan_few_features.csv")
 stored_data = {}
 
-# 1. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
 def index():
     return {'message': 'Bienvenue sur mon API de prediction'}
 
-# 2. Expose the prediction functionality, make a prediction from the passed
 @app.post('/predict_proba/{client_id}')
 def predict_client(client_id : int):
     row = data.loc[data['SK_ID_CURR'] == client_id]
@@ -83,7 +78,6 @@ def predict_newcustomer(data:new_customer):
         'NAME_EDUCATION_TYPE': NAME_EDUCATION_TYPE,
         'DAYS_EMPLOYED': DAYS_EMPLOYED,
         'DAYS_BIRTH': DAYS_BIRTH
-
     }
 
     stored_data['dataframe_dict'] = dataframe_dict
@@ -97,9 +91,5 @@ def predict_newcustomer(data:new_customer):
 def get_stored_data():
     return stored_data
 
-# 5. Run the API with uvicorn
-#    Will run on http://0.0.0.0:8000
 if __name__ == '__main__':
-    uvicorn.run("main:app", host='0.0.0.0', port=8000)
-
-#uvicorn app:app --reload
+    uvicorn.run("main:app")

@@ -43,8 +43,6 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
         numeric_features = selected_data.select_dtypes(include=['int64', 'float64']).drop(
             columns=['SK_ID_CURR', 'TARGET'])
     transformed_row = classifier.named_steps['preprocessor'].transform(selected_data)
-    print(transformed_row)
-    ##feature_names = model.named_steps['preprocessor'].get_feature_names_out()
     categorical_features = selected_data.select_dtypes(include=['object'])
 
     if hasattr(classifier.named_steps['preprocessor'].named_transformers_['cat'], 'get_feature_names_out'):
@@ -65,8 +63,6 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
 
     st.pyplot(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
     st.pyplot(shap.plots.waterfall(shap_values_water[0], max_display=10))
-    st.pyplot(shap.force_plot(explainer.expected_value[0], shap_values[0][0, :], df.iloc[100002]))
-    #shap.plots._waterfall.waterfall_legacy(explainer.expected_value[0],shap_values[1][0, :], data.iloc[input_id, :])
 
 @st.cache_data
 def plot_score(prediction):
@@ -139,7 +135,7 @@ if page == pages[0]:
 
     if pred_button:
 
-        request = requests.post(f'http://127.0.0.1:8000/predict_proba/{input_id}')
+        request = requests.post(f'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_proba/{input_id}')
 
         if request.status_code == 200:
             data = request.json()
@@ -184,7 +180,7 @@ if page == pages[1]:
             'DAYS_BIRTH': DAYS_BIRTH
         }
 
-        request = requests.post(url = 'http://127.0.0.1:8000/predict_new', data = json.dumps(dict))
+        request = requests.post(url = 'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_new', data = json.dumps(dict))
 
         if request.status_code == 200:
 
