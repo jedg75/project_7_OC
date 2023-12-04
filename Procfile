@@ -1,2 +1,1 @@
-release python app.py migrate
-web gunicorn project_7_OC.wsgi
+web: uvicorn main:app --host=0.0.0.0 --port=${PORT}
