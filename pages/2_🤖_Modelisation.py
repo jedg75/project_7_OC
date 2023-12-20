@@ -93,7 +93,7 @@ def plot_score(prediction):
         x=y_values_bin1,
         y=x_labels,
         orientation='h',
-        name='Need further evaluation',
+        name='Remboursement incertain',
         marker_color=bar_colors[1],
 
     )
@@ -102,7 +102,7 @@ def plot_score(prediction):
         x=y_values_bin2,
         y=x_labels,
         orientation='h',
-        name='Incertain',
+        name='Bon potentiel',
         marker_color=bar_colors[0],
 
     )
@@ -155,7 +155,7 @@ if page == pages[0]:
         ##prediction = classifier.predict_proba(row)
         plot_shap_values(input_type = 'data',input_id = input_id)
 
-        st.write(f"The model prediction score of the customer ID number {input_id} is {prediction*100}.")
+        st.write(f"Le score de prediction du modèle pour le client ID : {input_id} est {prediction*100}.")
         plot_score(prediction)
 
 if page == pages[1]:
@@ -202,4 +202,4 @@ if page == pages[1]:
             plot_shap_values(input_type ='df',input_df = input_data_df)
             plot_score(prediction)
 
-            st.write(f"The model prediction score of the customer is {prediction*100}.")
+            st.write(f"Le  score de prédiction du modèle pour le client est {prediction*100}.")
