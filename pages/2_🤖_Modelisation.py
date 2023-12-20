@@ -68,8 +68,8 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
 
     shap_values_summary = explainer_summary.shap_values(preprocessed_data)
 
-    shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist())
-    shap.plots.waterfall(shap_values_water[0], max_display=10)
+    st.pyplot(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
+    st.pyplot(shap.plots.waterfall(shap_values_water[0], max_display=10))
 
 @st.cache_data
 def plot_score(prediction):
