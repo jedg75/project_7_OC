@@ -6,6 +6,7 @@ import requests
 import plotly.graph_objs as go
 import json
 import pickle
+import streamlit.components.v1 as components
 import plotly.figure_factory as ff
 import plotly.express as px
 import numpy as np
@@ -34,6 +35,10 @@ shap.initjs()
 
 @st.cache_data
 def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
+
+    def st_shap(plot, height=None):
+        shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
+        components.html(shap_html, height=height)
     # plot the feature importance
     model_step = classifier.named_steps['model']
     preprocessed_data = classifier.named_steps['preprocessor'].transform(df)
@@ -48,7 +53,6 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
         numeric_features = selected_data.select_dtypes(include=['int64', 'float64']).drop(
             columns=['SK_ID_CURR','AMT_CREDIT','TARGET'])
     transformed_row = classifier.named_steps['preprocessor'].transform(selected_data)
-    print(len(transformed_row))
     categorical_features = selected_data.select_dtypes(include=['object'])
 
     if hasattr(classifier.named_steps['preprocessor'].named_transformers_['cat'], 'get_feature_names_out'):
@@ -62,14 +66,13 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
     explainer_summary = shap.Explainer(model_step, preprocessed_data, feature_names=column_names)
 
     # Create a new DataFrame with the transformed data and column names
-    print(numeric_features.columns.tolist() + column_names.tolist())
     preprocessed_row = pd.DataFrame(transformed_row, columns=numeric_features.columns.tolist() + column_names.tolist())
     shap_values_water = explainer_water(preprocessed_row)
 
     shap_values_summary = explainer_summary.shap_values(preprocessed_data)
 
-    st.pyplot(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
-    st.pyplot(shap.plots.waterfall(shap_values_water[0], max_display=10))
+    st_shap(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
+    st_shap(shap.plots.waterfall(shap_values_water[0], max_display=10))
 
 @st.cache_data
 def plot_score(prediction):
@@ -136,8 +139,8 @@ page = st.sidebar.radio("Aller vers la page :", pages)
 if page == pages[0]:
 
     st.write("Quel est l'ID du client pour la prédiction.")
-    input_id = st.number_input('Enter a client ID.', min_value=df.index.min(), max_value=df.index.max())
-    st.write(f"The ID number goes from {df['SK_ID_CURR'].min()} to {df['SK_ID_CURR'].max()}.")
+    input_id = st.number_input('Entrer un ID client.', min_value=df.index.min(), max_value=df.index.max())
+    st.write(f"Les ID vont de {df['SK_ID_CURR'].min()} à {df['SK_ID_CURR'].max()}.")
     pred_button = st.button("Effectuer la prediction.")
 
     if pred_button:
