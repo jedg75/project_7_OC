@@ -35,11 +35,8 @@ shap.initjs()
 
 @st.cache_data
 def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
-
-    def st_shap(plot, height=None):
-        shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
-        components.html(shap_html, height=height)
     # plot the feature importance
+    
     model_step = classifier.named_steps['model']
     preprocessed_data = classifier.named_steps['preprocessor'].transform(df)
 
@@ -71,8 +68,8 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
 
     shap_values_summary = explainer_summary.shap_values(preprocessed_data)
 
-    st_shap(shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist()))
-    st_shap(shap.plots.waterfall(shap_values_water[0], max_display=10))
+    shap.summary_plot(shap_values_summary, preprocessed_data, feature_names = numeric_features.columns.tolist() + column_names.tolist())
+    shap.plots.waterfall(shap_values_water[0], max_display=10)
 
 @st.cache_data
 def plot_score(prediction):
