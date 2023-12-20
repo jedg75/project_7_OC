@@ -23,7 +23,12 @@ classifier = load_model("classifier_lr_few.pkl","rb")
 
 # Load the preprocessed dataset
 df = pd.read_csv("data_loan_few_features.csv")
+model_params = classifier.get_params()
 
+# Afficher les paramètres
+print("Paramètres du modèle :")
+for param, value in model_params.items():
+    print(f"{param}: {value}")
 #load JS vis in the notebook
 shap.initjs()
 
@@ -41,8 +46,9 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
     else :
         selected_data = df.loc[df['SK_ID_CURR'] == input_id]
         numeric_features = selected_data.select_dtypes(include=['int64', 'float64']).drop(
-            columns=['SK_ID_CURR', 'TARGET'])
+            columns=['SK_ID_CURR','AMT_CREDIT','TARGET'])
     transformed_row = classifier.named_steps['preprocessor'].transform(selected_data)
+    print(len(transformed_row))
     categorical_features = selected_data.select_dtypes(include=['object'])
 
     if hasattr(classifier.named_steps['preprocessor'].named_transformers_['cat'], 'get_feature_names_out'):
@@ -56,6 +62,7 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
     explainer_summary = shap.Explainer(model_step, preprocessed_data, feature_names=column_names)
 
     # Create a new DataFrame with the transformed data and column names
+    print(numeric_features.columns.tolist() + column_names.tolist())
     preprocessed_row = pd.DataFrame(transformed_row, columns=numeric_features.columns.tolist() + column_names.tolist())
     shap_values_water = explainer_water(preprocessed_row)
 
