@@ -78,14 +78,14 @@ def plot_shap_values(input_type = 'df', input_df = None, input_id = None):
 def plot_score(prediction):
     # Define the data for the stacked bar chart
     x_labels = ['Score']
-    y_values_bin1 = [54]
-    y_values_bin2 = [36]
-    y_values_bin3 = [10]
+    y_values_bin1 = [50]
+    y_values_bin2 = [50]
+    #y_values_bin3 = [10]
 
     # Define the value for the vertical line
     vertical_line_value = prediction*100
 
-    bar_colors = ['#FF9900', '#EF553B', '#636EFA']
+    bar_colors = ['#FF9900', '#636EFA']
     line_color = 'black'
 
     # Create stacked bar traces
@@ -106,7 +106,7 @@ def plot_score(prediction):
         marker_color=bar_colors[0],
 
     )
-
+    '''
     trace_bin3 = go.Bar(
         x=y_values_bin3,
         y=x_labels,
@@ -115,7 +115,7 @@ def plot_score(prediction):
         marker_color=bar_colors[2],
 
     )
-
+    '''
     # Create a layout for the graph (optional)
     layout = go.Layout(
         title='Analyse des seuils de remboursement',
@@ -123,7 +123,7 @@ def plot_score(prediction):
     )
 
     # Create a Figure and add the traces and layout
-    fig = go.Figure(data=[trace_bin1, trace_bin2, trace_bin3], layout=layout)
+    fig = go.Figure(data=[trace_bin1, trace_bin2], layout=layout)
 
     fig.add_vline(x=vertical_line_value, line_dash="dot")
 
