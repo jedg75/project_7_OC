@@ -69,13 +69,13 @@ if options == "Remboursement du pret":
 
 if options == "Age":
 
-        age_customer = data['dataframe_dict']['DAYS_BIRTH'] / 365
+        age_customer = data['dataframe_dict']['DAYS_BIRTH'] / -365
 
         st.write('#### Distribution par Age')
         st.write("Etude du remboursement de prêt en fonction de la variable age.")
 
         fig1 = go.Figure()
-        fig1 = px.histogram(data0, x=-data0['DAYS_BIRTH'] / -365, nbins=25, labels={'x': 'Age (Years)', 'y': 'Count'})
+        fig1 = px.histogram(data0, x=-data0['DAYS_BIRTH'] / 365, nbins=25, labels={'x': 'Age (Years)', 'y': 'Count'})
         fig1.update_layout(title='Repartition par age des clients', xaxis_title='Age (Année)', yaxis_title='Quantité (en milliers)')
         fig1.add_vline(x=age_customer, line_dash="dot", name = 'client')
         fig1.update_layout(bargap=0.2)

@@ -11,4 +11,5 @@ fastapi==0.103.2
 imbalanced-learn==0.10.0
 alembic==1.12.0
 scikit-learn==1.2.2
-matplotlib
+matplotlib==3.7.2
+ipython==8.15
