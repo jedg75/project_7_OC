@@ -82,7 +82,7 @@ def plot_score(prediction):
     # Define the value for the vertical line
     vertical_line_value = prediction*100
 
-    bar_colors = ['#FF9900', '#636EFA']
+    bar_colors = ['#636EFA', '#FF9900']
     line_color = 'black'
 
     # Create stacked bar traces
@@ -103,16 +103,7 @@ def plot_score(prediction):
         marker_color=bar_colors[0],
 
     )
-    '''
-    trace_bin3 = go.Bar(
-        x=y_values_bin3,
-        y=x_labels,
-        orientation='h',
-        name='Great',
-        marker_color=bar_colors[2],
 
-    )
-    '''
     # Create a layout for the graph (optional)
     layout = go.Layout(
         title='Analyse des seuils de remboursement',
