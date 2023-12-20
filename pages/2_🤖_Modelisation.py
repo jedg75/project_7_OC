@@ -143,8 +143,9 @@ if page == pages[0]:
         ##prediction = classifier.predict_proba(row)
         plot_shap_values(input_type = 'data',input_id = input_id)
 
-        st.write(f"Le score de prediction du modèle pour le client ID : {input_id} est {prediction*100}.")
         plot_score(prediction)
+        st.write(f"Le score de prediction du modèle pour le client ID : {input_id} est {prediction*100}.")
+
 
 if page == pages[1]:
 
