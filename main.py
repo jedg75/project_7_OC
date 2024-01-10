@@ -6,22 +6,29 @@ import pandas as pd
 
 app = FastAPI()
 
-pickle_in = open("classifier_lr_few.pkl","rb")
+pickle_in = open("classifier_lr_few.pkl", "rb")
 classifier_pipeline = pickle.load(pickle_in)
 
 data = pd.read_csv("data_loan_few_features.csv")
+
 stored_data = {}
 
+# Root endpoint, returns a welcome message
 @app.get('/')
 def index():
     return {'message': 'Bienvenue sur mon API de prediction'}
 
+# Endpoint to predict probability for a specific client ID
 @app.post('/predict_proba/{client_id}')
-def predict_client(client_id : int):
+def predict_client(client_id: int):
+    # Retrieve the row for the given client ID
     row = data.loc[data['SK_ID_CURR'] == client_id]
+
     if row.empty:
-        return { "message" : 'Customer do not exists' }
+        return {"message": 'Customer does not exist'}
+
     prediction = classifier_pipeline.predict_proba(row)
+
     row.fillna("null", inplace=True)
 
     if prediction[0][0] > 0.67:
@@ -29,12 +36,14 @@ def predict_client(client_id : int):
     else:
         prediction_text = "Need further evaluation"
 
+    # Return prediction details along with the dataframe
     return {
         'prediction': prediction_text,
-        'probabilité': prediction[0][0],
+        'probability': prediction[0][0],
         'dataframe': row.to_dict()
     }
-
+    
+# Endpoint to predict probability for a new customer
 @app.post("/predict_new")
 def predict_newcustomer(data:new_customer):
     data = data.dict()
@@ -87,6 +96,7 @@ def predict_newcustomer(data:new_customer):
         'dataframe_dict': dataframe_dict
     }
 
+# Endpoint to retrieve stored data
 @app.get("/predict_new")
 def get_stored_data():
     return stored_data
