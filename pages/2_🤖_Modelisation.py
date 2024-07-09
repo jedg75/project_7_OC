@@ -133,7 +133,7 @@ if page == pages[0]:
 
     if pred_button:
 
-        request = requests.post(f'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_proba/{input_id}')
+        request = requests.post(f'https://loan-score-dashboard-7c8b8db1ab5b.herokuapp.com/predict_proba/{input_id}')
 
         if request.status_code == 200:
             data = request.json()
@@ -179,7 +179,7 @@ if page == pages[1]:
             'DAYS_BIRTH': DAYS_BIRTH
         }
 
-        request = requests.post(url = 'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_new', data = json.dumps(dict))
+        request = requests.post(url = 'https://loan-score-dashboard-7c8b8db1ab5b.herokuapp.com/predict_new', data = json.dumps(dict))
 
         if request.status_code == 200:
 
