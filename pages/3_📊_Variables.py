@@ -54,6 +54,8 @@ print(data)
 
 if request.status_code == 200:
         data = request.json()
+        print(data)
+
 else:
         st.write("Il faut renseigner les informations d'un nouveau client")
 
