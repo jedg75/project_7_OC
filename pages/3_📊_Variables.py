@@ -50,6 +50,8 @@ options = st.sidebar.radio("Choix de la variable",
 
 request = requests.get(url = 'https://loan-score-dashboard-7c8b8db1ab5b.herokuapp.com/predict_new')
 data = request.json()
+print(data)
+
 if request.status_code == 200:
         data = request.json()
 else:
