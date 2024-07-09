@@ -48,7 +48,7 @@ options = st.sidebar.radio("Choix de la variable",
                                     "Analyse bivariée"
                                     ])
 
-request = requests.get(url = 'https://loan-score-dashboard-55640624b325.herokuapp.com/predict_new')
+request = requests.get(url = 'https://loan-score-dashboard-7c8b8db1ab5b.herokuapp.com/predict_new')
 data = request.json()
 if request.status_code == 200:
         data = request.json()
