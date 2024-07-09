@@ -137,7 +137,7 @@ if page == pages[0]:
 
         if request.status_code == 200:
             data = request.json()
-            prediction = round(data['probabilité'], 2)
+            prediction = round(data['probability'], 2)
 
         row = df.loc[df['SK_ID_CURR'] == input_id]
         ##prediction = classifier.predict_proba(row)
@@ -184,7 +184,7 @@ if page == pages[1]:
         if request.status_code == 200:
 
             data = request.json()
-            prediction = round(data['probabilité'], 2)
+            prediction = round(data['probability'], 2)
             input_data_df = pd.DataFrame(data['dataframe_dict'], index=[0]).drop(columns=["AMT_CREDIT"])
 
             print(input_data_df.columns)
